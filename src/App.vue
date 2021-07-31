@@ -5,6 +5,7 @@
     <!-- 根路由出口 -->
     <router-view />
     <el-button>normal button</el-button>
+    <p>yellow</p>
   </div>
 </template>
 
@@ -16,4 +17,11 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
+p
+{
+    font: $font-kai;
+
+    color: $warning-color;
+}
+
 </style>
