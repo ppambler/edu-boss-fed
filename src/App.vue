@@ -11,6 +11,13 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import request from '@/utils/request'
+request({
+  method: 'GET',
+  url: '/boss/v2/api-docs?group=edu-boss-boot'
+}).then(data => {
+  console.log(data)
+})
 export default Vue.extend({
   name: 'App'
 })
