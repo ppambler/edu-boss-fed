@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-aside width="200px">Aside</el-aside>
+    <el-aside width="200px"> <app-aside /></el-aside>
     <el-container>
       <el-header>Header</el-header>
       <el-main> <router-view /> </el-main>
@@ -10,8 +10,12 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import AppAside from './components/app-aside.vue'
 export default Vue.extend({
-  name: 'LayoutIndex'
+  name: 'LayoutIndex',
+  components: {
+    AppAside
+  }
 })
 </script>
 
@@ -28,5 +32,8 @@ export default Vue.extend({
 }
 .el-main {
   background: #e9eef3;
+}
+.el-aside {
+  background: #d3dce6;
 }
 </style>
