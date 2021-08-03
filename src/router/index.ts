@@ -53,7 +53,7 @@ const routes: Array<RouteConfig> = [
       {
         path: '/advert-space',
         name: 'advert-space',
-        component: () => import(/* webpackChunkName: 'advert-space' */ '@/views/advert-space/index.vue')
+        component: () => import(/* webpackChunkName: 'a-dvert-space' */ '@/views/advert-space/index.vue')
       }
     ]
   },
