@@ -21,7 +21,11 @@
         <el-input type="password" v-model="form.password"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button class="login-btn" type="primary" @click="onSubmit"
+        <el-button
+          class="login-btn"
+          type="primary"
+          @click="onSubmit"
+          :loading="isLoginLoading"
           >登录</el-button
         >
       </el-form-item>
@@ -60,7 +64,8 @@ export default Vue.extend({
             trigger: 'blur'
           }
         ]
-      }
+      },
+      isLoginLoading: false
     }
   },
   methods: {
@@ -71,6 +76,9 @@ export default Vue.extend({
       try {
         // 1. 表单验证 -> 验证不通过会执行 catch 里边的代码，err 为 false，会根据输入内容决定页面显示什么样的 校验 message
         await (this.$refs.form as Form).validate()
+
+        // 登录按钮 loading
+        this.isLoginLoading = true
 
         // 2. 验证通过 -> 提交表单
         const { data } = await request({
@@ -92,6 +100,9 @@ export default Vue.extend({
         this.$message.success('登录成功')
       } catch (err) {
         console.log('登录失败', err)
+      } finally {
+        // 结束登录按钮的 loading
+        this.isLoginLoading = false
       }
     }
   }
