@@ -78,8 +78,8 @@ const router = new VueRouter({
 // next：通行的标志
 router.beforeEach((to, from, next) => {
   // console.log('进入了路由全局守卫')
-  console.log('to => ', to)
-  console.log('from => ', from)
+  // console.log('to => ', to)
+  // console.log('from => ', from)
 
   // to.matched 是一个数组（匹配到是路由记录）
   // console.log(to.matched) // 最后一个元素是 to

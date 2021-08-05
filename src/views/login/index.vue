@@ -80,6 +80,7 @@ export default Vue.extend({
         this.isLoginLoading = true
 
         // 2. 验证通过 -> 提交表单
+        console.log(await login(this.form))
         const { data } = await login(this.form)
 
         // 3. 处理请求结果
