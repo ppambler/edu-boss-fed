@@ -56,7 +56,7 @@ request.interceptors.response.use(function (response) { // 状态码为 2xx 都�
 }, async function (error) { // 超出 2xx 状态码都都执行这里
   console.log('请求响应失败了 => ', error)
   // 如果是使用的 HTTP 状态码，错误处理就写到这里
-  console.dir(error)
+  // console.dir(error)
   if (error.response) { // 请求发出去收到响应了，但是状态码超出了 2xx 范围
     const { status } = error.response
     if (status === 400) {
