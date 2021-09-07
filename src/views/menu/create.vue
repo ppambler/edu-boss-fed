@@ -72,11 +72,33 @@ export default Vue.extend({
         shown: false
       },
       rules: {
-        name: [{ required: true, message: '请输入菜单名称', trigger: 'blur' }],
-        description: [
-          { required: true, message: '请输入菜单描述', trigger: 'blur' }
+        name: [
+          { required: true, message: '请输入菜单名称', trigger: 'blur' },
+          {
+            min: 2,
+            max: 8,
+            message: '长度在 2 到 8 个字符',
+            trigger: 'blur'
+          }
         ],
-        icon: [{ required: true, message: '请输入前端图标', trigger: 'blur' }]
+        description: [
+          { required: true, message: '请输入菜单描述', trigger: 'blur' },
+          {
+            min: 6,
+            max: 140,
+            message: '长度在 2 到 140 个字符',
+            trigger: 'blur'
+          }
+        ],
+        icon: [
+          { required: true, message: '请输入前端图标', trigger: 'blur' },
+          {
+            min: 2,
+            max: 8,
+            message: '长度在 2 到 8 个字符',
+            trigger: 'blur'
+          }
+        ]
       },
       isSubmitLoading: false,
       parentMenuList: [] // 父级菜单列表
