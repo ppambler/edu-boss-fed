@@ -69,12 +69,12 @@ export default Vue.extend({
     return {
       form: {
         parentId: -1, // -1 表示没有上级菜单
-        name: '你要创建的菜单名',
+        name: '',
         region: '',
-        href: '路径',
-        icon: '图标',
+        href: '',
+        icon: '',
         orderNum: 0,
-        description: '菜单描述',
+        description: '',
         shown: false
       },
       rules: {
@@ -133,16 +133,23 @@ export default Vue.extend({
 
       try {
         await (this.$refs.form as Form).validate()
-        this.isSubmitLoading = true
-        const { data } = await createOrUpdateMenu(this.form)
-        if (data.code === '000000') {
-          this.$message.success('提交成功')
-          this.$router.push({
-            name: 'menu'
+        this.$confirm('是否提交数据', '提示', {})
+          .then(async () => {
+            this.isSubmitLoading = true
+            const { data } = await createOrUpdateMenu(this.form)
+            if (data.code === '000000') {
+              this.$message.success('提交成功')
+              this.$router.push({
+                name: 'menu'
+              })
+            } else {
+              this.$message.error('提交失败')
+            }
           })
-        } else {
-          this.$message.error('提交失败')
-        }
+          .catch(() => {
+            // 取消执行这里
+            this.$message.info('已取消删除')
+          })
       } catch (error) {
         this.$message.error('验证失败')
       } finally {

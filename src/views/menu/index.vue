@@ -91,7 +91,7 @@ export default Vue.extend({
     },
     handleDelete (item: any) {
       console.log(item)
-      this.$confirm('确认删除吗？', '删除提示', {})
+      this.$confirm('确认删除吗？', '提示', {})
         .then(async () => {
           // 确认执行这里
           // 请求删除操作
