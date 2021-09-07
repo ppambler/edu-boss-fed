@@ -40,13 +40,13 @@
         </el-table-column>
         <el-table-column label="操作" min-width="150" align="center">
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
+            <el-button size="mini"  @click="handleDelete(scope.row)"
               >编辑</el-button
             >
             <el-button
               size="mini"
               type="danger"
-              @click="handleDelete(scope.$index, scope.row)"
+              @click="handleDelete(scope.row)"
               >删除</el-button
             >
           </template>
@@ -58,7 +58,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { getAllMenus } from '@/services/menu'
+import { getAllMenus, deleteMenu } from '@/services/menu'
 
 export default Vue.extend({
   name: 'MenuIndex',
@@ -84,8 +84,23 @@ export default Vue.extend({
     handleEdit () {
       console.log('handleEdit')
     },
-    handleDelete () {
-      console.log('handleDelete')
+    handleDelete (item: any) {
+      console.log(item)
+      this.$confirm('确认删除吗？', '删除提示', {})
+        .then(async () => {
+          // 确认执行这里
+          // 请求删除操作
+          const { data } = await deleteMenu(item.id)
+          if (data.code === '000000') {
+            this.$message.success('删除成功')
+            this.loadAllMenus() // 更新数据列表
+          }
+        })
+        .catch((err) => {
+          // 取消执行这里
+          console.log(err)
+          this.$message.info('已取消删除')
+        })
     },
     formatLevel (menu: any) {
       return menu.level === 0 ? '一级' : menu.level === 1 ? '二级' : '三级'
