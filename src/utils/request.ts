@@ -32,7 +32,7 @@ function refreshToken () {
 }
 
 // 请求拦截器
-let isRfreshing = false // 控制刷新 token 的状态
+let isRefreshing = false // 控制刷新 token 的状态
 let requests: any[] = [] // 存储刷新 token 期间过来的 401 请求
 request.interceptors.request.use(function (config) {
   // 我们就在这里通过改写 config 配置信息来实现业务功能的统一处理
@@ -70,8 +70,8 @@ request.interceptors.response.use(function (response) { // 状态码为 2xx 都�
       }
 
       // 尝试刷新获取新的 token
-      if (!isRfreshing) {
-        isRfreshing = true // 开启刷新状态
+      if (!isRefreshing) {
+        isRefreshing = true // 开启刷新状态
         // 尝试刷新获取新的 token
         return refreshToken().then(res => {
           if (!res.data.success) {
@@ -91,7 +91,7 @@ request.interceptors.response.use(function (response) { // 状态码为 2xx 都�
           redirectLogin()
           return Promise.reject(error)
         }).finally(() => {
-          isRfreshing = false // 重置刷新状态
+          isRefreshing = false // 重置刷新状态
         })
       }
 
