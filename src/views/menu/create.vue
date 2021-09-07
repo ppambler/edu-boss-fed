@@ -12,9 +12,14 @@
           <el-input v-model="form.href"></el-input>
         </el-form-item>
         <el-form-item label="上级菜单">
-          <el-select v-model="form.region" placeholder="请选择上级菜单">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+          <el-select v-model="form.parentId" placeholder="请选择上级菜单">
+            <el-option :value="-1" label="无上级菜单"></el-option>
+            <el-option
+              v-for="item in parentMenuList"
+              :label="item.name"
+              :value="item.id"
+              :key="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="描述" prop="description">
@@ -37,7 +42,9 @@
           ></el-input-number>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit" :loading="isSubmitLoading">提交</el-button>
+          <el-button type="primary" @click="onSubmit" :loading="isSubmitLoading"
+            >提交</el-button
+          >
           <el-button :disabled="isSubmitLoading">重置</el-button>
         </el-form-item>
       </el-form>
@@ -47,7 +54,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { createOrUpdateMenu } from '@/services/menu'
+import { createOrUpdateMenu, getEditMenuInfo } from '@/services/menu'
 import { Form } from 'element-ui'
 
 export default Vue.extend({
@@ -71,10 +78,24 @@ export default Vue.extend({
         ],
         icon: [{ required: true, message: '请输入前端图标', trigger: 'blur' }]
       },
-      isSubmitLoading: false
+      isSubmitLoading: false,
+      parentMenuList: [] // 父级菜单列表
     }
   },
+  created () {
+    this.loadMenuInfo()
+  },
   methods: {
+    async loadMenuInfo () {
+      try {
+        const { data } = await getEditMenuInfo()
+        if (data.code === '000000') {
+          this.parentMenuList = data.data.parentMenuList
+        }
+      } catch (error) {
+        this.$message.error('加载上级菜单数据失败')
+      }
+    },
     async onSubmit () {
       // 1. 表单验证
       // 2. 验证通过，提交表单
