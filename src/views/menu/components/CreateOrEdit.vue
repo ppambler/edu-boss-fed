@@ -2,7 +2,7 @@
   <div class="menu-create">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <span>{{ isEdit ? '编辑菜单' : '添加菜单' }}</span>
+        <span>{{ isEdit ? "编辑菜单" : "添加菜单" }}</span>
       </div>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="菜单名称" prop="name">
@@ -45,7 +45,7 @@
           <el-button type="primary" @click="onSubmit" :loading="isSubmitLoading"
             >提交</el-button
           >
-          <el-button :disabled="isSubmitLoading">重置</el-button>
+          <el-button v-if="!isEdit" :disabled="isSubmitLoading">重置</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -58,7 +58,7 @@ import { createOrUpdateMenu, getEditMenuInfo } from '@/services/menu'
 import { Form } from 'element-ui'
 
 export default Vue.extend({
-  name: 'MenuCreate',
+  name: 'MenuCreateOrEdit',
   props: {
     isEdit: {
       type: Boolean,
@@ -116,7 +116,10 @@ export default Vue.extend({
   methods: {
     async loadMenuInfo () {
       try {
-        const { data } = await getEditMenuInfo()
+        const { data } = await getEditMenuInfo(this.$route.params.id || -1)
+        if (data.data.menuInfo) {
+          this.form = data.data.menuInfo
+        }
         if (data.code === '000000') {
           this.parentMenuList = data.data.parentMenuList
         }
