@@ -40,7 +40,7 @@
         </el-table-column>
         <el-table-column label="操作" min-width="150" align="center">
           <template slot-scope="scope">
-            <el-button size="mini"  @click="handleDelete(scope.row)"
+            <el-button size="mini" @click="handleEdit(scope.row)"
               >编辑</el-button
             >
             <el-button
@@ -81,8 +81,13 @@ export default Vue.extend({
         this.$message.error('加载菜单列表失败')
       }
     },
-    handleEdit () {
-      console.log('handleEdit')
+    handleEdit (item: any) {
+      this.$router.push({
+        name: 'menu-edit',
+        params: {
+          id: item.id
+        }
+      })
     },
     handleDelete (item: any) {
       console.log(item)
