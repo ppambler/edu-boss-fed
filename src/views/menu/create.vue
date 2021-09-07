@@ -9,29 +9,29 @@
           <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item label="菜单路径">
-          <el-input v-model="form.name"></el-input>
+          <el-input v-model="form.href"></el-input>
         </el-form-item>
         <el-form-item label="上级菜单">
-          <el-select v-model="form.region" placeholder="请选择活动区域">
+          <el-select v-model="form.region" placeholder="请选择上级菜单">
             <el-option label="区域一" value="shanghai"></el-option>
             <el-option label="区域二" value="beijing"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="描述">
-          <el-input v-model="form.name"></el-input>
+          <el-input v-model="form.description"></el-input>
         </el-form-item>
         <el-form-item label="前端图标">
-          <el-input v-model="form.name"></el-input>
+          <el-input v-model="form.icon"></el-input>
         </el-form-item>
         <el-form-item label="是否显示">
-          <el-radio-group v-model="form.resource">
-            <el-radio label="是"></el-radio>
-            <el-radio label="否"></el-radio>
+          <el-radio-group v-model="form.shown">
+            <el-radio :label="true">是</el-radio>
+            <el-radio :label="false">否</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="排序">
           <el-input-number
-            v-model="form.num"
+            v-model="form.orderNum"
             :min="1"
             label="描述文字"
           ></el-input-number>
@@ -52,14 +52,14 @@ export default Vue.extend({
   data () {
     return {
       form: {
-        name: '',
+        parentId: -1, // -1 表示没有上级菜单
+        name: '你要创建的菜单名',
         region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        href: '路径',
+        icon: '图标',
+        orderNum: 0,
+        description: '菜单描述',
+        shown: false
       }
     }
   },
