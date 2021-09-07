@@ -4,8 +4,8 @@
       <div slot="header" class="clearfix">
         <span>添加菜单</span>
       </div>
-      <el-form ref="form" :model="form" label-width="80px">
-        <el-form-item label="菜单名称">
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="菜单名称" prop="name">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item label="菜单路径">
@@ -17,10 +17,10 @@
             <el-option label="区域二" value="beijing"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="描述">
+        <el-form-item label="描述" prop="description">
           <el-input v-model="form.description"></el-input>
         </el-form-item>
-        <el-form-item label="前端图标">
+        <el-form-item label="前端图标" prop="icon">
           <el-input v-model="form.icon"></el-input>
         </el-form-item>
         <el-form-item label="是否显示">
@@ -37,8 +37,8 @@
           ></el-input-number>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">提交</el-button>
-          <el-button>重置</el-button>
+          <el-button type="primary" @click="onSubmit" :loading="isSubmitLoading">提交</el-button>
+          <el-button :disabled="isSubmitLoading">重置</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -48,6 +48,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { createOrUpdateMenu } from '@/services/menu'
+import { Form } from 'element-ui'
 
 export default Vue.extend({
   name: 'MenuCreate',
@@ -62,19 +63,38 @@ export default Vue.extend({
         orderNum: 0,
         description: '菜单描述',
         shown: false
-      }
+      },
+      rules: {
+        name: [{ required: true, message: '请输入菜单名称', trigger: 'blur' }],
+        description: [
+          { required: true, message: '请输入菜单描述', trigger: 'blur' }
+        ],
+        icon: [{ required: true, message: '请输入前端图标', trigger: 'blur' }]
+      },
+      isSubmitLoading: false
     }
   },
   methods: {
     async onSubmit () {
       // 1. 表单验证
       // 2. 验证通过，提交表单
-      const { data } = await createOrUpdateMenu(this.form)
-      if (data.code === '000000') {
-        this.$message.success('提交成功')
-        this.$router.push({
-          name: 'menu'
-        })
+
+      try {
+        await (this.$refs.form as Form).validate()
+        this.isSubmitLoading = true
+        const { data } = await createOrUpdateMenu(this.form)
+        if (data.code === '000000') {
+          this.$message.success('提交成功')
+          this.$router.push({
+            name: 'menu'
+          })
+        } else {
+          this.$message.error('提交失败')
+        }
+      } catch (error) {
+        this.$message.error('验证失败')
+      } finally {
+        this.isSubmitLoading = false
       }
     }
   }
