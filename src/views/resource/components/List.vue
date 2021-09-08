@@ -39,7 +39,7 @@
         </div>
       </div>
       <el-table
-        :data="tableData"
+        :data="resources"
         style="width: 100%"
         :border="true"
         :stripe="true"
@@ -54,19 +54,20 @@
         >
         </el-table-column>
         <el-table-column
-          prop="address"
+          prop="url"
           width="180"
           label="资源路径"
           align="center"
         >
         </el-table-column>
-        <el-table-column prop="address" width="180" label="描述" align="center">
+        <el-table-column prop="description" width="180" label="描述" align="center">
         </el-table-column>
         <el-table-column
           width="180"
-          prop="address"
+          prop="createdTime"
           label="添加时间"
           align="center"
+          :formatter="formatDate"
         >
         </el-table-column>
         <el-table-column label="操作" min-width="150" align="center">
@@ -89,32 +90,13 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { getResourcePages } from '@/services/resource'
+import dayjs from 'dayjs'
 export default Vue.extend({
   name: 'ResourceList',
   data () {
     return {
-      tableData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }
-      ],
+      resources: [], // 资源列表
       form: {
         name: '',
         region: '',
@@ -127,7 +109,17 @@ export default Vue.extend({
       }
     }
   },
+  created () {
+    this.loadResources()
+  },
+
   methods: {
+    async loadResources () {
+      const { data } = await getResourcePages({
+        // 查询条件
+      })
+      this.resources = data.data.records
+    },
     onSubmit () {
       console.log('submit!')
     },
@@ -136,6 +128,9 @@ export default Vue.extend({
     },
     handleDelete (item: any) {
       console.log('handleDelete', item)
+    },
+    formatDate (item:any) {
+      return dayjs(item.createdTime).format('YYYY-MM-DD HH:mm:ss')
     }
   }
 })
