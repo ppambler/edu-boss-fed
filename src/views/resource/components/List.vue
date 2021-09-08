@@ -5,12 +5,12 @@
         <el-form ref="form" :model="form" label-width="80px">
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form-item label="资源名称">
+              <el-form-item prop="name" label="资源名称">
                 <el-input v-model="form.name"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="资源分类">
+              <el-form-item prop="categoryId" label="资源分类">
                 <el-select
                   v-model="form.categoryId"
                   placeholder="请选择资源分类"
@@ -28,14 +28,14 @@
           </el-row>
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form-item label="资源路径">
+              <el-form-item prop="url" label="资源路径">
                 <el-input v-model="form.url"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item>
                 <el-button type="primary" @click="onSubmit">查询搜索</el-button>
-                <el-button>重置</el-button>
+                <el-button @click="onReset">重置</el-button>
               </el-form-item>
             </el-col>
           </el-row>
@@ -116,6 +116,7 @@ import Vue from 'vue'
 import { getResourcePages } from '@/services/resource'
 import { getResourceCategories } from '@/services/resource-category'
 import dayjs from 'dayjs'
+import { Form } from 'element-ui'
 export default Vue.extend({
   name: 'ResourceList',
   data () {
@@ -171,6 +172,11 @@ export default Vue.extend({
       console.log('Current', val)
       // 请求获取对应页码的数据
       this.form.current = val // 修改要查询的页码
+      this.loadResources()
+    },
+    onReset () {
+      (this.$refs.form as Form).resetFields()
+      this.form.current = 1 // 重置回到第1页
       this.loadResources()
     }
   }
