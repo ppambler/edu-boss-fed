@@ -49,9 +49,7 @@
         </el-form>
 
         <div class="card-header-button">
-          <el-button @click="dialogShow = true"
-            >添加</el-button
-          >
+          <el-button @click="dialogShow = true">添加</el-button>
           <el-button>资源分类</el-button>
           <div v-if="dialogShow" class="dialogBox">
             <resource-dialog
@@ -107,6 +105,15 @@
               @click="handleDelete(scope.row)"
               >删除</el-button
             >
+            <div v-if="dialogEditShow" class="dialogBox">
+              <resource-dialog
+                title="编辑资源"
+                :visible.sync="dialogEditShow"
+                :data="resourceCategories"
+                v-on:success="loadResources"
+                :form-data="resourceData"
+              ></resource-dialog>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -155,7 +162,9 @@ export default Vue.extend({
       totalCount: 0,
       resourceCategories: [], // 资源分类列表
       isLoading: true, // 加载状态
-      dialogShow: false
+      dialogShow: false,
+      dialogEditShow: false,
+      resourceData: {} // 单个资源数据
     }
   },
   created () {
@@ -182,6 +191,8 @@ export default Vue.extend({
     },
     handleEdit (item: any) {
       console.log('handleEdit', item)
+      this.dialogEditShow = true
+      this.resourceData = item
     },
     handleDelete (item: any) {
       console.log('handleDelete', item)

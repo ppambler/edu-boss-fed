@@ -1,6 +1,6 @@
 <template>
   <div class="resource-dialog">
-    <el-dialog :title="title" :visible="dialogFormVisible" @close="closeDialog">
+    <el-dialog :title="title" :visible="dialogFormVisible" @close="closeDialog" :append-to-body="true">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="资源名称" prop="name">
           <el-input v-model="form.name"></el-input>
@@ -23,8 +23,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="closeDialog">取 消</el-button>
-        <el-button type="primary" @click="onSubmit">确 定</el-button>
+        <el-button @click="closeDialog" :disabled="isLoading">取 消</el-button>
+        <el-button type="primary" @click="onSubmit" :loading="isLoading">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -33,6 +33,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { createOrUpdateResource } from '@/services/resource'
+import { Form } from 'element-ui'
 
 export default Vue.extend({
   name: 'ResourceDialog',
@@ -52,6 +53,12 @@ export default Vue.extend({
     data: {
       type: Array,
       required: true
+    },
+    formData: Object
+  },
+  created () {
+    if (this.formData) {
+      this.form = this.formData
     }
   },
   data () {
@@ -93,7 +100,7 @@ export default Vue.extend({
           }
         ]
       },
-      isSubmitLoading: false,
+      isLoading: false,
       resourceCategories: this.data // 资源分类列表
     }
   },
@@ -102,11 +109,21 @@ export default Vue.extend({
       this.$emit('update:visible', false)
     },
     async onSubmit () {
-      const { data } = await createOrUpdateResource(this.form)
-      if (data.code === '000000') {
-        this.$message.success('添加成功')
-        this.$emit('success')
-        this.closeDialog()
+      try {
+        await (this.$refs.form as Form).validate()
+        this.isLoading = true
+        const { data } = await createOrUpdateResource(this.form)
+        if (data.code === '000000') {
+          this.$message.success('添加成功')
+          this.$emit('success')
+          this.closeDialog()
+        } else {
+          this.$message.error('添加失败')
+        }
+      } catch (error) {
+        this.$message.error('验证失败')
+      } finally {
+        this.isLoading = false
       }
     }
   }
