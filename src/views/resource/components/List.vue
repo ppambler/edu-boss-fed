@@ -139,7 +139,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { getResourcePages } from '@/services/resource'
+import { getResourcePages, deleteResource } from '@/services/resource'
 import { getResourceCategories } from '@/services/resource-category'
 import dayjs from 'dayjs'
 import { Form } from 'element-ui'
@@ -196,6 +196,21 @@ export default Vue.extend({
     },
     handleDelete (item: any) {
       console.log('handleDelete', item)
+      this.$confirm('确认删除吗？', '提示', {})
+        .then(async () => {
+          // 确认执行这里
+          // 请求删除操作
+          const { data } = await deleteResource(item.id)
+          if (data.code === '000000') {
+            this.$message.success('删除成功')
+            this.loadResources() // 更新数据列表
+          }
+        })
+        .catch((err) => {
+          // 取消执行这里
+          console.log(err)
+          this.$message.info('已取消删除')
+        })
     },
     formatDate (item: any) {
       return dayjs(item.createdTime).format('YYYY-MM-DD HH:mm:ss')
