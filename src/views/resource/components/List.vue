@@ -57,6 +57,8 @@
             <resource-dialog
               title="添加资源"
               :visible.sync="dialogShow"
+              :data="resourceCategories"
+              v-on:success="loadResources"
             ></resource-dialog>
           </div>
         </div>

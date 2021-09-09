@@ -2,17 +2,16 @@
   <div class="resource-dialog">
     <el-dialog :title="title" :visible="dialogFormVisible" @close="closeDialog">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="菜单名称" prop="name">
+        <el-form-item label="资源名称" prop="name">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item label="资源路径">
-          <el-input v-model="form.href"></el-input>
+        <el-form-item label="资源路径" prop="url">
+          <el-input v-model="form.url"></el-input>
         </el-form-item>
         <el-form-item label="资源分类">
-          <el-select v-model="form.parentId" placeholder="请选择上级菜单">
-            <el-option :value="-1" label="无上级菜单"></el-option>
+          <el-select v-model="form.categoryId" placeholder="不分类" clearable>
             <el-option
-              v-for="item in parentMenuList"
+              v-for="item in resourceCategories"
               :label="item.name"
               :value="item.id"
               :key="item.id"
@@ -25,9 +24,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="closeDialog">取 消</el-button>
-        <el-button type="primary" @click="closeDialog"
-          >确 定</el-button
-        >
+        <el-button type="primary" @click="onSubmit">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -35,6 +32,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { createOrUpdateResource } from '@/services/resource'
 
 export default Vue.extend({
   name: 'ResourceDialog',
@@ -50,21 +48,25 @@ export default Vue.extend({
         // 这个值必须匹配下列字符串中的一个
         return ['添加资源', '编辑资源'].indexOf(value) !== -1
       }
+    },
+    data: {
+      type: Array,
+      required: true
     }
   },
   data () {
     return {
       dialogFormVisible: this.visible,
       form: {
-        parentId: -1, // -1 表示没有上级菜单
+        id: null,
+        categoryId: '', // 默认不分类
         name: '',
-        region: '',
-        href: '',
+        url: '',
         description: ''
       },
       rules: {
         name: [
-          { required: true, message: '请输入菜单名称', trigger: 'blur' },
+          { required: true, message: '请输入资源名称', trigger: 'blur' },
           {
             min: 2,
             max: 8,
@@ -73,7 +75,7 @@ export default Vue.extend({
           }
         ],
         description: [
-          { required: true, message: '请输入菜单描述', trigger: 'blur' },
+          { required: true, message: '请输入资源描述', trigger: 'blur' },
           {
             min: 2,
             max: 140,
@@ -81,23 +83,31 @@ export default Vue.extend({
             trigger: 'blur'
           }
         ],
-        icon: [
-          { required: true, message: '请输入前端图标', trigger: 'blur' },
+        url: [
+          { required: true, message: '请输入资源路径', trigger: 'blur' },
           {
             min: 2,
             max: 8,
-            message: '长度在 2 到 8 个字符',
+            message: '长度在 2 到 50 个字符',
             trigger: 'blur'
           }
         ]
       },
       isSubmitLoading: false,
-      parentMenuList: [] // 父级菜单列表
+      resourceCategories: this.data // 资源分类列表
     }
   },
   methods: {
     closeDialog () {
       this.$emit('update:visible', false)
+    },
+    async onSubmit () {
+      const { data } = await createOrUpdateResource(this.form)
+      if (data.code === '000000') {
+        this.$message.success('添加成功')
+        this.$emit('success')
+        this.closeDialog()
+      }
     }
   }
 })
