@@ -49,8 +49,16 @@
         </el-form>
 
         <div class="card-header-button">
-          <el-button>添加</el-button>
+          <el-button @click="dialogShow = true"
+            >添加</el-button
+          >
           <el-button>资源分类</el-button>
+          <div v-if="dialogShow" class="dialogBox">
+            <resource-dialog
+              title="添加资源"
+              :visible.sync="dialogShow"
+            ></resource-dialog>
+          </div>
         </div>
       </div>
       <el-table
@@ -126,8 +134,12 @@ import { getResourcePages } from '@/services/resource'
 import { getResourceCategories } from '@/services/resource-category'
 import dayjs from 'dayjs'
 import { Form } from 'element-ui'
+import ResourceDialog from './ResourceDialog.vue'
 export default Vue.extend({
   name: 'ResourceList',
+  components: {
+    ResourceDialog
+  },
   data () {
     return {
       resources: [], // 资源列表
@@ -140,7 +152,8 @@ export default Vue.extend({
       },
       totalCount: 0,
       resourceCategories: [], // 资源分类列表
-      isLoading: true // 加载状态
+      isLoading: true, // 加载状态
+      dialogShow: false
     }
   },
   created () {
