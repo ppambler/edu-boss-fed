@@ -76,8 +76,8 @@ export default Vue.extend({
           { required: true, message: '请输入资源名称', trigger: 'blur' },
           {
             min: 2,
-            max: 8,
-            message: '长度在 2 到 8 个字符',
+            max: 20,
+            message: '长度在 2 到 20 个字符',
             trigger: 'blur'
           }
         ],
@@ -94,7 +94,7 @@ export default Vue.extend({
           { required: true, message: '请输入资源路径', trigger: 'blur' },
           {
             min: 2,
-            max: 8,
+            max: 50,
             message: '长度在 2 到 50 个字符',
             trigger: 'blur'
           }
