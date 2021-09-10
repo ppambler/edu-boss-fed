@@ -2,9 +2,16 @@
   <div class="category-list">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <el-button @click="$router.push({ name: 'category-create' })"
-          >添加资源分类</el-button
+        <el-button @click="dialogShow = true"
+          >添加分类</el-button
         >
+        <div v-if="dialogShow" class="dialogBox">
+          <category-dialog
+            title="添加分类"
+            :visible.sync="dialogShow"
+            v-on:success="loadAllCategorys"
+          ></category-dialog>
+        </div>
       </div>
       <el-table
         :data="categorys"
@@ -16,7 +23,7 @@
         </el-table-column>
         <el-table-column
           prop="name"
-          label="资源分类名称"
+          label="分类名称"
           min-width="150"
           align="center"
         >
@@ -59,12 +66,16 @@
 import Vue from 'vue'
 import { getResourceCategories } from '@/services/resource-category'
 import dayjs from 'dayjs'
-
+import CategoryDialog from './CategoryDialog.vue'
 export default Vue.extend({
   name: 'CategoryIndex',
+  components: {
+    CategoryDialog
+  },
   data () {
     return {
-      categorys: []
+      categorys: [],
+      dialogShow: false
     }
   },
   created () {

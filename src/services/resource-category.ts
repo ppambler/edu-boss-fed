@@ -10,3 +10,10 @@ export const getResourceCategories = () => {
     url: '/boss/resource/category/getAll'
   })
 }
+export const createOrUpdateCategory = (data:any) => {
+  return request({
+    method: 'POST',
+    url: '/boss/resource/category/saveOrderUpdate',
+    data
+  })
+}
