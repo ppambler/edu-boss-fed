@@ -107,15 +107,6 @@
               @click="handleDelete(scope.row)"
               >删除</el-button
             >
-            <div v-if="dialogEditShow" class="dialogBox">
-              <resource-dialog
-                title="编辑资源"
-                :visible.sync="dialogEditShow"
-                :data="resourceCategories"
-                v-on:success="loadResources"
-                :form-data="resourceData"
-              ></resource-dialog>
-            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -136,6 +127,15 @@
       >
       </el-pagination>
     </el-card>
+    <div v-if="dialogEditShow" class="dialogBox">
+      <resource-dialog
+        title="编辑资源"
+        :visible.sync="dialogEditShow"
+        :data="resourceCategories"
+        v-on:success="loadResources"
+        :form-data="resourceData"
+      ></resource-dialog>
+    </div>
   </div>
 </template>
 
