@@ -2,9 +2,7 @@
   <div class="category-list">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <el-button @click="dialogShow = true"
-          >添加分类</el-button
-        >
+        <el-button @click="dialogShow = true">添加分类</el-button>
         <div v-if="dialogShow" class="dialogBox">
           <category-dialog
             title="添加分类"
@@ -59,6 +57,14 @@
         </el-table-column>
       </el-table>
     </el-card>
+    <div v-if="dialogEditShow" class="dialogBox">
+      <category-dialog
+        title="编辑分类"
+        :visible.sync="dialogEditShow"
+        v-on:success="loadAllCategorys"
+        :form-data="categoryData"
+      ></category-dialog>
+    </div>
   </div>
 </template>
 
@@ -75,7 +81,9 @@ export default Vue.extend({
   data () {
     return {
       categorys: [],
-      dialogShow: false
+      dialogShow: false,
+      dialogEditShow: false,
+      categoryData: {} // 单个资源分类数据
     }
   },
   created () {
@@ -93,12 +101,9 @@ export default Vue.extend({
       }
     },
     handleEdit (item: any) {
-      this.$router.push({
-        name: 'category-edit',
-        params: {
-          id: item.id
-        }
-      })
+      console.log('handleEdit', item)
+      this.dialogEditShow = true
+      this.categoryData = item
     },
     handleDelete (item: any) {
       console.log(item)
