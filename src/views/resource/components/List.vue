@@ -50,7 +50,9 @@
 
         <div class="card-header-button">
           <el-button @click="dialogShow = true">添加</el-button>
-          <el-button>资源分类</el-button>
+          <el-button @click="$router.push({ name: 'resource-category' })"
+            >资源分类</el-button
+          >
           <div v-if="dialogShow" class="dialogBox">
             <resource-dialog
               title="添加资源"
