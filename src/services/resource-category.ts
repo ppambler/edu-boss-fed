@@ -17,3 +17,10 @@ export const createOrUpdateCategory = (data:any) => {
     data
   })
 }
+
+export const deleteCategory = (id: number) => {
+  return request({
+    method: 'DELETE',
+    url: `/boss/resource/category/${id}`
+  })
+}

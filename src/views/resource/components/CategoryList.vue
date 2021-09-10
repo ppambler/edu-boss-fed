@@ -70,7 +70,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { getResourceCategories } from '@/services/resource-category'
+import { getResourceCategories, deleteCategory } from '@/services/resource-category'
 import dayjs from 'dayjs'
 import CategoryDialog from './CategoryDialog.vue'
 export default Vue.extend({
@@ -107,21 +107,21 @@ export default Vue.extend({
     },
     handleDelete (item: any) {
       console.log(item)
-      // this.$confirm('确认删除吗？', '提示', {})
-      //   .then(async () => {
-      //     // 确认执行这里
-      //     // 请求删除操作
-      //     const { data } = await deleteCategory(item.id)
-      //     if (data.code === '000000') {
-      //       this.$message.success('删除成功')
-      //       this.loadAllCategorys() // 更新数据列表
-      //     }
-      //   })
-      //   .catch((err) => {
-      //     // 取消执行这里
-      //     console.log(err)
-      //     this.$message.info('已取消删除')
-      //   })
+      this.$confirm('是否要删除该分类？', '提示', {})
+        .then(async () => {
+          // 确认执行这里
+          // 请求删除操作
+          const { data } = await deleteCategory(item.id)
+          if (data.code === '000000') {
+            this.$message.success('删除成功')
+            this.loadAllCategorys() // 更新数据列表
+          }
+        })
+        .catch((err) => {
+          // 取消执行这里
+          console.log(err)
+          this.$message.info('已取消删除')
+        })
     },
     formatDate (item: any) {
       return dayjs(item.createdTime).format('YYYY-MM-DD HH:mm:ss')
