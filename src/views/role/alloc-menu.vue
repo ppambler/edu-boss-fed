@@ -29,6 +29,7 @@ import {
   getRoleMenus
 } from '@/services/menu'
 import { Tree } from 'element-ui'
+import { filter } from 'vue/types/umd'
 
 export default Vue.extend({
   name: 'AllocMenu',
@@ -45,7 +46,10 @@ export default Vue.extend({
         children: 'subMenuList',
         label: 'name'
       },
-      checkedKeys: []
+      checkedKeys: [],
+      hasSubMenuList: [],
+      roleMenus: [],
+      filterId: []
     }
   },
   async created () {
@@ -55,7 +59,12 @@ export default Vue.extend({
   methods: {
     async loadRoleMenus () {
       const { data } = await getRoleMenus(this.roleId)
+      this.roleMenus = data.data
       this.getCheckedKeys(data.data)
+      this.filterNode(this.hasSubMenuList)
+      this.checkedKeys = this.checkedKeys.filter(
+        (v) => this.filterId.indexOf(v) === -1
+      )
     },
     getCheckedKeys (menus: any) {
       menus.forEach((menu: any) => {
@@ -64,6 +73,8 @@ export default Vue.extend({
           this.checkedKeys = [...this.checkedKeys, menu.id] as any
         }
         if (menu.subMenuList) {
+          // console.log(menu.subMenuList.length)
+          this.hasSubMenuList.push(menu as never)
           this.getCheckedKeys(menu.subMenuList)
         }
       })
@@ -81,10 +92,23 @@ export default Vue.extend({
         menuIdList
       })
       this.$message.success('操作成功')
-      this.$router.back()
+      this.$router.push({
+        name: 'role'
+      })
     },
     resetChecked () {
       (this.$refs['menu-tree'] as Tree).setCheckedKeys([])
+    },
+    filterNode (hasSubMenuList: any) {
+      hasSubMenuList.forEach((menu: any) => {
+        if (!menu.selected) {
+          return
+        }
+        const r = menu.subMenuList.some((v: any) => v.selected === false)
+        if (r) {
+          this.filterId.push(menu.id as never)
+        }
+      })
     }
   }
 })
