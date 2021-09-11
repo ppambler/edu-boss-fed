@@ -42,7 +42,6 @@ export default Vue.extend({
     async loadUserInfo () {
       const { data } = await getUserInfo()
       this.userInfo = data.content
-      console.log('loadUserInfo')
     },
     handleLogout () {
       this.$confirm('确认退出吗？', '退出提示', {

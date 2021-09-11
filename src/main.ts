@@ -11,7 +11,9 @@ import './styles/index.scss'
 
 Vue.config.productionTip = false
 
-Vue.use(ElementUI)
+Vue.use(ElementUI, {
+  size: 'small'
+})
 
 new Vue({
   router,
