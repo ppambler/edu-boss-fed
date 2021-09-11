@@ -157,23 +157,19 @@ export default Vue.extend({
       this.dialogEditShow = true
       this.roleData = item
     },
-    handleDelete (item: any) {
-      console.log('handleDelete', item)
-      this.$confirm('确认删除吗？', '提示', {})
-        .then(async () => {
-          // 确认执行这里
-          // 请求删除操作
-          const { data } = await deleteRole(item.id)
-          if (data.code === '000000') {
-            this.$message.success('删除成功')
-            this.loadRoles() // 更新数据列表
-          }
-        })
-        .catch((err) => {
-          // 取消执行这里
-          console.log(err)
-          this.$message.info('已取消删除')
-        })
+    async handleDelete (role: any) {
+      try {
+        await this.$confirm(`确认删除角色：${role.name}？`, '删除提示')
+        await deleteRole(role.id)
+        this.$message.success('删除成功')
+        this.loadRoles()
+      } catch (err) {
+        if (err && err.response) {
+          this.$message.error('删除失败，请重试')
+        } else {
+          this.$message.info('取消删除')
+        }
+      }
     },
     formatDate (item: any) {
       return dayjs(item.createdTime).format('YYYY-MM-DD HH:mm:ss')

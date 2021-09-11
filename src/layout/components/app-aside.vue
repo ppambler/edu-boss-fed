@@ -70,8 +70,11 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .aside {
+  height: 100%;
   .el-menu {
-    min-height: 100vh;
+    /* min-height: 100vh; */
+    width: 200px;
+    height: 100%;
     border-right: none;
     .el-menu-item:hover {
       color: #f7f8f8 !important;

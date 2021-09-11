@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-aside width="200px"> <app-aside /></el-aside>
+    <el-aside width="auto"> <app-aside /></el-aside>
     <el-container>
       <el-header>
         <app-header />
@@ -26,13 +26,19 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .el-container {
   min-height: 100vh;
-  /* min-width: 980px; */
 }
 .el-aside {
+  position: sticky;
+  top: 0;
+  max-height: 100vh;
   background: #d3dce6;
 }
 .el-header {
-  background: #fff;
+  /* background: #fff; */
+  background: #f8f9fb;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 .el-main {
   background: #e9eef3;
