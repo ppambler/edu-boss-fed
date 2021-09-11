@@ -6,7 +6,7 @@
           >添加菜单</el-button
         >
       </div>
-      <el-table :data="menus" style="width: 100%" :border="true" :stripe="true">
+      <el-table :data="menus" style="width: 100%" :border="true" :stripe="true" height="68vh">
         <el-table-column label="编号" width="100" type="index" align="center">
         </el-table-column>
         <el-table-column
