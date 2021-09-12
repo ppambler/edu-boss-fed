@@ -29,7 +29,6 @@ import {
   getRoleMenus
 } from '@/services/menu'
 import { Tree } from 'element-ui'
-import { filter } from 'vue/types/umd'
 
 export default Vue.extend({
   name: 'AllocMenu',
