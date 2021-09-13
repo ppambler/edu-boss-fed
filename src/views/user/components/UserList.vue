@@ -13,11 +13,11 @@
               <el-form-item>
                 <el-button
                   type="primary"
-                  @click="onSubmit"
+                  @click="handleQuery"
                   :disabled="isLoading"
-                  >查询搜索</el-button
+                  >查询</el-button
                 >
-                <el-button @click="onReset" :disabled="isLoading"
+                <el-button @click="handleReset" :disabled="isLoading"
                   >重置</el-button
                 >
               </el-form-item>
@@ -25,8 +25,18 @@
           </el-row>
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form-item label="注册时间">
-                <el-input v-model="form.createTime"></el-input>
+              <el-form-item label="注册时间" prop="rangeDate">
+                <el-date-picker
+                  v-model="form.rangeDate"
+                  type="datetimerange"
+                  range-separator="至"
+                  start-placeholder="开始时间"
+                  end-placeholder="结束时间"
+                  value-format="yyyy-MM-dd"
+                  unlink-panels
+                  is-range
+                  :picker-options="pickerOptions"
+                />
               </el-form-item>
             </el-col>
           </el-row>
@@ -64,28 +74,31 @@
           align="center"
           :formatter="formatDate"
         ></el-table-column>
-        <el-table-column width="180" label="状态" align="center">
+        <el-table-column width="120" label="状态" align="center">
           <template slot-scope="scope">
-            <i title="正常" :class="['status',scope.row.status === 'ENABLE' ? 'status-success' : 'status-fail']"></i>
+            <!-- <i
+              title="正常"
+              :class="[
+                'status',
+                scope.row.status === 'ENABLE'
+                  ? 'status-success'
+                  : 'status-fail',
+              ]"
+            ></i> -->
+            <el-switch
+              v-model="scope.row.status"
+              active-value="ENABLE"
+              inactive-value="DISABLE"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+              @change="handleForbidUser(scope.row)"
+            >
+            </el-switch>
           </template>
         </el-table-column>
         <el-table-column label="操作" min-width="150" align="center">
-          <template slot-scope="scope">
-            <div>
-              <el-button
-                type="text"
-                @click="
-                  $router.push({
-                    name: 'alloc-menu',
-                    params: {
-                      userId: scope.row.id,
-                    },
-                  })
-                "
-                >禁用</el-button
-              >
-              <el-button type="text">分配角色</el-button>
-            </div>
+          <template>
+            <el-button type="text">分配角色</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -119,7 +132,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { getUserPages } from '@/services/user'
+import { getUserPages, forbidUser } from '@/services/user'
 import dayjs from 'dayjs'
 import { Form } from 'element-ui'
 import UserDialog from './UserDialog.vue'
@@ -132,15 +145,68 @@ export default Vue.extend({
     return {
       users: [], // 用户列表
       form: {
+        // 似乎叫 filterParams 比叫好呀！
         phone: '',
         currentPage: 1, // 默认查询第1页数据
-        pageSize: 5 // 每页大小
+        pageSize: 5, // 每页大小
+        startCreateTime: '',
+        endCreateTime: '',
+        rangeDate: []
       },
       totalCount: 0,
       isLoading: true, // 加载状态
       dialogShow: false,
       dialogEditShow: false,
-      userData: {} // 单个用户数据
+      userData: {}, // 单个用户数据
+      pickerOptions: {
+        shortcuts: [
+          {
+            text: '最近一周',
+            onClick (picker:any) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+              picker.$emit('pick', [start, end])
+            }
+          },
+          {
+            text: '最近一个月',
+            onClick (picker:any) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+              picker.$emit('pick', [start, end])
+            }
+          },
+          {
+            text: '最近三个月',
+            onClick (picker:any) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+              picker.$emit('pick', [start, end])
+            }
+          },
+          {
+            text: '最近六个月',
+            onClick (picker:any) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 180)
+              picker.$emit('pick', [start, end])
+            }
+          },
+          {
+            text: '最近一年',
+            onClick (picker:any) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 360)
+              picker.$emit('pick', [start, end])
+            }
+          }
+        ]
+      }
     }
   },
   created () {
@@ -150,12 +216,30 @@ export default Vue.extend({
   methods: {
     async loadUsers () {
       this.isLoading = true // 展示加载中状态
+      const { rangeDate } = this.form
+      if (rangeDate && rangeDate.length) {
+        this.form.startCreateTime = rangeDate[0]
+        this.form.endCreateTime = rangeDate[1]
+      } else {
+        this.form.startCreateTime = ''
+        this.form.endCreateTime = ''
+      }
       const { data } = await getUserPages(this.form)
       this.users = data.data.records
       this.totalCount = data.data.total
       this.isLoading = false // 关闭加载中状态
     },
-    onSubmit () {
+    async handleForbidUser (user: any) {
+      try {
+        console.log(user)
+        const { data } = await forbidUser(user.id)
+        console.log(data)
+      } catch (error) {
+        user.status = 'ENABLE'
+        console.log(error)
+      }
+    },
+    handleQuery () {
       console.log('submit!')
       this.form.currentPage = 1 // 筛选查询从第 1 页开始
       this.loadUsers()
@@ -180,7 +264,7 @@ export default Vue.extend({
       this.form.currentPage = val // 修改要查询的页码
       this.loadUsers()
     },
-    onReset () {
+    handleReset () {
       (this.$refs.form as Form).resetFields()
       this.form.currentPage = 1 // 重置回到第1页
       this.loadUsers()
@@ -207,17 +291,17 @@ export default Vue.extend({
 }
 
 .status-success {
-    background: #51cf66;
+  background: #51cf66;
 }
 .status-fail {
-    background: #ff6b6b;
+  background: #ff6b6b;
 }
 .status {
-    display: inline-block;
-    cursor: pointer;
-    width: .875rem;
-    height: .875rem;
-    vertical-align: middle;
-    border-radius: 50%;
+  display: inline-block;
+  cursor: pointer;
+  width: 0.875rem;
+  height: 0.875rem;
+  vertical-align: middle;
+  border-radius: 50%;
 }
 </style>
