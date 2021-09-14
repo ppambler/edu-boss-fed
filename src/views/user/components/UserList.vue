@@ -136,7 +136,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { getUserPages, forbidUser } from '@/services/user'
-import { getAllRoles } from '@/services/role'
+import { getAllRoles, getUserRoles } from '@/services/role'
 import dayjs from 'dayjs'
 import { Form } from 'element-ui'
 import UserDialog from './UserDialog.vue'
@@ -275,6 +275,10 @@ export default Vue.extend({
       // 加载角色列表
       const { data } = await getAllRoles()
       this.roles = data.data
+
+      const { data: { data: userRoles } } = await getUserRoles((this.currentUser as any).id)
+      this.userData = userRoles.map((item: any) => item.id)
+
       // 展示对话框
       this.dialogVisible = true
     }

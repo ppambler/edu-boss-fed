@@ -47,3 +47,10 @@ export const allocateUserRoles = (data: any) => {
     data
   })
 }
+
+export const getUserRoles = (userId: string | number) => {
+  return request({
+    method: 'GET',
+    url: `/boss/role/user/${userId}`
+  })
+}

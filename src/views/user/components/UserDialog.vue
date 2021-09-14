@@ -34,24 +34,17 @@ export default Vue.extend({
       type: Boolean,
       default: false
     },
-    formData: Object,
+    formData: Array,
     rolesData: Array,
     currentUser: Object
   },
   created () {
-    if (this.formData) {
-      this.form = this.formData
-    }
+    this.roleIdList = this.formData as never || []
     this.roles = this.rolesData as never
   },
   data () {
     return {
       dialogFormVisible: this.visible,
-      form: {
-        name: '',
-        code: '',
-        description: ''
-      },
       roles: [],
       roleIdList: [],
       isLoading: false
