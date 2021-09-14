@@ -98,7 +98,9 @@
         </el-table-column>
         <el-table-column label="操作" min-width="150" align="center">
           <template>
-            <el-button type="text"  @click="dialogVisible = true">分配角色</el-button>
+            <el-button type="text" @click="handleSelectRole"
+              >分配角色</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -119,12 +121,13 @@
       >
       </el-pagination>
     </el-card>
-    <div v-if="dialogVisible " class="dialogBox">
+    <div v-if="dialogVisible" class="dialogBox">
       <user-dialog
         :isEdit="true"
-        :visible.sync="dialogVisible "
+        :visible.sync="dialogVisible"
         v-on:success="loadUsers"
         :form-data="userData"
+        :roles-data="roles"
       ></user-dialog>
     </div>
   </div>
@@ -133,6 +136,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { getUserPages, forbidUser } from '@/services/user'
+import { getAllRoles } from '@/services/role'
 import dayjs from 'dayjs'
 import { Form } from 'element-ui'
 import UserDialog from './UserDialog.vue'
@@ -158,11 +162,12 @@ export default Vue.extend({
       dialogShow: false,
       dialogVisible: false,
       userData: {}, // 单个用户数据
+      roles: [], // 所有角色列表
       pickerOptions: {
         shortcuts: [
           {
             text: '最近一周',
-            onClick (picker:any) {
+            onClick (picker: any) {
               const end = new Date()
               const start = new Date()
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
@@ -171,7 +176,7 @@ export default Vue.extend({
           },
           {
             text: '最近一个月',
-            onClick (picker:any) {
+            onClick (picker: any) {
               const end = new Date()
               const start = new Date()
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
@@ -180,7 +185,7 @@ export default Vue.extend({
           },
           {
             text: '最近三个月',
-            onClick (picker:any) {
+            onClick (picker: any) {
               const end = new Date()
               const start = new Date()
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
@@ -189,7 +194,7 @@ export default Vue.extend({
           },
           {
             text: '最近六个月',
-            onClick (picker:any) {
+            onClick (picker: any) {
               const end = new Date()
               const start = new Date()
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 180)
@@ -198,7 +203,7 @@ export default Vue.extend({
           },
           {
             text: '最近一年',
-            onClick (picker:any) {
+            onClick (picker: any) {
               const end = new Date()
               const start = new Date()
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 360)
@@ -268,6 +273,13 @@ export default Vue.extend({
       (this.$refs.form as Form).resetFields()
       this.form.currentPage = 1 // 重置回到第1页
       this.loadUsers()
+    },
+    async handleSelectRole () {
+      // 加载角色列表
+      const { data } = await getAllRoles()
+      this.roles = data.data
+      // 展示对话框
+      this.dialogVisible = true
     }
   }
 })
