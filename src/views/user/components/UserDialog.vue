@@ -6,7 +6,7 @@
       @close="closeDialog"
       :append-to-body="true"
     >
-      <el-select v-model="value1" multiple placeholder="请选择">
+      <el-select v-model="roleIdList" multiple placeholder="请选择">
         <el-option
           v-for="item in roles"
           :key="item.id"
@@ -17,7 +17,7 @@
       </el-select>
       <div slot="footer" class="dialog-footer">
         <el-button @click="closeDialog" :disabled="isLoading">取 消</el-button>
-        <el-button type="primary" @click="onSubmit" :loading="isLoading"
+        <el-button type="primary" @click="handleAllocRole" :loading="isLoading"
           >确 定</el-button
         >
       </div>
@@ -26,7 +26,7 @@
 </template>
 <script lang="ts">
 import Vue from 'vue'
-// import { createOrUpdate } from '@/services/user'
+import { allocateUserRoles } from '@/services/role'
 export default Vue.extend({
   name: 'UserDialog',
   props: {
@@ -35,7 +35,8 @@ export default Vue.extend({
       default: false
     },
     formData: Object,
-    rolesData: Array
+    rolesData: Array,
+    currentUser: Object
   },
   created () {
     if (this.formData) {
@@ -52,7 +53,7 @@ export default Vue.extend({
         description: ''
       },
       roles: [],
-      value1: [],
+      roleIdList: [],
       isLoading: false
     }
   },
@@ -60,23 +61,19 @@ export default Vue.extend({
     closeDialog () {
       this.$emit('update:visible', false)
     },
-    async onSubmit () {
-      // try {
-      //   await (this.$refs.form as Form).validate()
-      //   this.isLoading = true
-      //   const { data } = await createOrUpdate(this.form)
-      //   if (data.code === '000000') {
-      //     this.$message.success(this.isEdit ? '修改成功' : '添加成功')
-      //     this.$emit('success')
-      //     this.closeDialog()
-      //   } else {
-      //     this.$message.error(this.isEdit ? '修改失败' : '添加失败')
-      //   }
-      // } catch (error) {
-      //   this.$message.error('验证失败')
-      // } finally {
-      //   this.isLoading = false
-      // }
+    async handleAllocRole () {
+      this.isLoading = true
+      const { data } = await allocateUserRoles({
+        userId: (this.currentUser as any).id,
+        roleIdList: this.roleIdList
+      })
+      if (data.code === '000000') {
+        this.$message.success('分配成功')
+        this.closeDialog()
+      } else {
+        this.$message.error('分配失败')
+      }
+      this.isLoading = false
     }
   }
 })

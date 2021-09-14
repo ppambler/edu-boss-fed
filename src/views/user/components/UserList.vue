@@ -97,8 +97,8 @@
           </template>
         </el-table-column>
         <el-table-column label="操作" min-width="150" align="center">
-          <template>
-            <el-button type="text" @click="handleSelectRole"
+          <template slot-scope="scope">
+            <el-button type="text" @click="handleSelectRole(scope.row)"
               >分配角色</el-button
             >
           </template>
@@ -125,9 +125,9 @@
       <user-dialog
         :isEdit="true"
         :visible.sync="dialogVisible"
-        v-on:success="loadUsers"
         :form-data="userData"
         :roles-data="roles"
+        :current-user="currentUser"
       ></user-dialog>
     </div>
   </div>
@@ -163,6 +163,7 @@ export default Vue.extend({
       dialogVisible: false,
       userData: {}, // 单个用户数据
       roles: [], // 所有角色列表
+      currentUser: null, // 分配角色的当前用户
       pickerOptions: {
         shortcuts: [
           {
@@ -249,11 +250,6 @@ export default Vue.extend({
       this.form.currentPage = 1 // 筛选查询从第 1 页开始
       this.loadUsers()
     },
-    handleEdit (item: any) {
-      console.log('handleEdit', item)
-      this.dialogVisible = true
-      this.userData = item
-    },
     formatDate (item: any) {
       return dayjs(item.createTime).format('YYYY-MM-DD HH:mm:ss')
     },
@@ -274,7 +270,8 @@ export default Vue.extend({
       this.form.currentPage = 1 // 重置回到第1页
       this.loadUsers()
     },
-    async handleSelectRole () {
+    async handleSelectRole (role: any) {
+      this.currentUser = role
       // 加载角色列表
       const { data } = await getAllRoles()
       this.roles = data.data
