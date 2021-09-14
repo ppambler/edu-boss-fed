@@ -98,7 +98,7 @@
         </el-table-column>
         <el-table-column label="操作" min-width="150" align="center">
           <template>
-            <el-button type="text">分配角色</el-button>
+            <el-button type="text"  @click="dialogVisible = true">分配角色</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -119,10 +119,10 @@
       >
       </el-pagination>
     </el-card>
-    <div v-if="dialogEditShow" class="dialogBox">
+    <div v-if="dialogVisible " class="dialogBox">
       <user-dialog
         :isEdit="true"
-        :visible.sync="dialogEditShow"
+        :visible.sync="dialogVisible "
         v-on:success="loadUsers"
         :form-data="userData"
       ></user-dialog>
@@ -156,7 +156,7 @@ export default Vue.extend({
       totalCount: 0,
       isLoading: true, // 加载状态
       dialogShow: false,
-      dialogEditShow: false,
+      dialogVisible: false,
       userData: {}, // 单个用户数据
       pickerOptions: {
         shortcuts: [
@@ -246,7 +246,7 @@ export default Vue.extend({
     },
     handleEdit (item: any) {
       console.log('handleEdit', item)
-      this.dialogEditShow = true
+      this.dialogVisible = true
       this.userData = item
     },
     formatDate (item: any) {

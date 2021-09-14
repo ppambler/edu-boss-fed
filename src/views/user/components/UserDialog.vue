@@ -1,22 +1,20 @@
 <template>
   <div class="user-dialog">
     <el-dialog
-      :title="isEdit ? '编辑用户' : '添加用户'"
+      title="分配角色"
       :visible="dialogFormVisible"
       @close="closeDialog"
       :append-to-body="true"
     >
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="用户名称" prop="name">
-          <el-input v-model="form.name"></el-input>
-        </el-form-item>
-        <el-form-item label="用户编码" prop="code">
-          <el-input v-model="form.code"></el-input>
-        </el-form-item>
-        <el-form-item label="描述" prop="description">
-          <el-input type="textarea" v-model="form.description"></el-input>
-        </el-form-item>
-      </el-form>
+      <el-select v-model="value1" multiple placeholder="请选择">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        >
+        </el-option>
+      </el-select>
       <div slot="footer" class="dialog-footer">
         <el-button @click="closeDialog" :disabled="isLoading">取 消</el-button>
         <el-button type="primary" @click="onSubmit" :loading="isLoading"
@@ -28,7 +26,7 @@
 </template>
 <script lang="ts">
 import Vue from 'vue'
-import { createOrUpdate } from '@/services/user'
+// import { createOrUpdate } from '@/services/user'
 import { Form } from 'element-ui'
 export default Vue.extend({
   name: 'UserDialog',
@@ -37,14 +35,10 @@ export default Vue.extend({
       type: Boolean,
       default: false
     },
-    isEdit: {
-      type: Boolean,
-      required: true
-    },
     formData: Object
   },
   created () {
-    if (this.isEdit) {
+    if (this.formData) {
       this.form = this.formData
     }
   },
@@ -56,17 +50,29 @@ export default Vue.extend({
         code: '',
         description: ''
       },
-      rules: {
-        name: [
-          { required: true, message: '请输入用户名称', trigger: 'blur' },
-          {
-            min: 1,
-            max: 20,
-            message: '长度在 1 到 20 个字符',
-            trigger: 'blur'
-          }
-        ]
-      },
+      options: [
+        {
+          value: '选项1',
+          label: '黄金糕'
+        },
+        {
+          value: '选项2',
+          label: '双皮奶'
+        },
+        {
+          value: '选项3',
+          label: '蚵仔煎'
+        },
+        {
+          value: '选项4',
+          label: '龙须面'
+        },
+        {
+          value: '选项5',
+          label: '北京烤鸭'
+        }
+      ],
+      value1: [],
       isLoading: false
     }
   },
@@ -75,22 +81,22 @@ export default Vue.extend({
       this.$emit('update:visible', false)
     },
     async onSubmit () {
-      try {
-        await (this.$refs.form as Form).validate()
-        this.isLoading = true
-        const { data } = await createOrUpdate(this.form)
-        if (data.code === '000000') {
-          this.$message.success(this.isEdit ? '修改成功' : '添加成功')
-          this.$emit('success')
-          this.closeDialog()
-        } else {
-          this.$message.error(this.isEdit ? '修改失败' : '添加失败')
-        }
-      } catch (error) {
-        this.$message.error('验证失败')
-      } finally {
-        this.isLoading = false
-      }
+      // try {
+      //   await (this.$refs.form as Form).validate()
+      //   this.isLoading = true
+      //   const { data } = await createOrUpdate(this.form)
+      //   if (data.code === '000000') {
+      //     this.$message.success(this.isEdit ? '修改成功' : '添加成功')
+      //     this.$emit('success')
+      //     this.closeDialog()
+      //   } else {
+      //     this.$message.error(this.isEdit ? '修改失败' : '添加失败')
+      //   }
+      // } catch (error) {
+      //   this.$message.error('验证失败')
+      // } finally {
+      //   this.isLoading = false
+      // }
     }
   }
 })
