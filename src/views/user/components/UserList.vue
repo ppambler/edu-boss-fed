@@ -272,11 +272,13 @@ export default Vue.extend({
     },
     async handleSelectRole (role: any) {
       this.currentUser = role
+      const loadRoles = getAllRoles()
+      const loadUserRoles = getUserRoles((this.currentUser as any).id)
       // 加载角色列表
-      const { data } = await getAllRoles()
+      const { data } = await loadRoles
       this.roles = data.data
 
-      const { data: { data: userRoles } } = await getUserRoles((this.currentUser as any).id)
+      const { data: { data: userRoles } } = await loadUserRoles
       this.userData = userRoles.map((item: any) => item.id)
 
       // 展示对话框
