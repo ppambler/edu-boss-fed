@@ -42,13 +42,13 @@
         style="width: 100%; margin-bottom: 20px"
       >
         <el-table-column prop="id" label="ID" width="50" align="center"> </el-table-column>
-        <el-table-column prop="courseName" label="课程名称" width="180" align="center">
+        <el-table-column prop="courseName" label="课程名称" align="center">
         </el-table-column>
         <el-table-column prop="price" label="价格" align="center" :formatter="formatPrice"> </el-table-column>
         <el-table-column prop="sortNum" label="排序" align="center"> </el-table-column>
         <el-table-column prop="status" label="上架状态" align="center">
-          <template>
-            <el-switch active-color="#13ce66" inactive-color="#ff4949">
+          <template slot-scope="scope">
+            <el-switch v-model="scope.row.status" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0">
             </el-switch>
           </template>
         </el-table-column>

@@ -8,6 +8,7 @@
       text-color="#bbbfbc"
       active-text-color="#f7f8f8"
       router
+      collapse
     >
       <el-submenu index="1">
         <template slot="title">
@@ -73,7 +74,7 @@ export default Vue.extend({
   height: 100%;
   .el-menu {
     /* min-height: 100vh; */
-    width: 200px;
+    width: auto;
     height: 100%;
     border-right: none;
     .el-menu-item:hover {
