@@ -94,7 +94,7 @@
             </el-switch>
           </el-form-item>
           <template v-if="course.activityCourse">
-            <el-form-item label="开始时间">
+            <el-form-item label="开始时间" label-width="120px">
               <el-date-picker
                 v-model="course.activityCourseDTO.beginTime"
                 type="date"
@@ -103,7 +103,7 @@
               >
               </el-date-picker>
             </el-form-item>
-            <el-form-item label="结束时间">
+            <el-form-item label="结束时间" label-width="120px">
               <el-date-picker
                 v-model="course.activityCourseDTO.endTime"
                 type="date"
@@ -111,7 +111,7 @@
                 value-format="yyyy-MM-dd"
               />
             </el-form-item>
-            <el-form-item label="秒杀价">
+            <el-form-item label="秒杀价" label-width="120px">
               <el-input
                 v-model.number="course.activityCourseDTO.amount"
                 type="number"
@@ -119,7 +119,7 @@
                 <template slot="append">元</template>
               </el-input>
             </el-form-item>
-            <el-form-item label="秒杀库存">
+            <el-form-item label="秒杀库存" label-width="120px">
               <el-input
                 v-model.number="course.activityCourseDTO.stock"
                 type="number"
@@ -149,9 +149,18 @@
             <el-button type="primary" @click="handleSave">保存</el-button>
           </el-form-item>
         </div>
-        <el-form-item v-if="activeStep >= 0 && activeStep < 4">
-          <el-button @click="activeStep++">下一步</el-button>
-        </el-form-item>
+        <div v-if="activeStep >= 0 && activeStep <= 2">
+          <el-form-item >
+            <el-button @click="activeStep++">下一步</el-button>
+          </el-form-item>
+        </div>
+        <div v-else-if="activeStep < 4">
+          <el-form-item label-width="120px">
+            <el-button @click="activeStep++"
+              >下一步</el-button
+            >
+          </el-form-item>
+        </div>
       </el-form>
     </el-card>
   </div>
