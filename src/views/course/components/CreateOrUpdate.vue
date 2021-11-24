@@ -249,6 +249,11 @@ export default Vue.extend({
         activityCourseDTO.endTime = dayjs(activityCourseDTO.endTime).format(
           'YYYY-MM-DD'
         )
+      } else {
+        data.data.activityCourseDTO = {
+          beginTime: '',
+          endTime: ''
+        }
       }
       this.course = data.data
     },
