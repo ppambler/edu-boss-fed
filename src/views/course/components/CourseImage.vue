@@ -43,15 +43,15 @@ export default Vue.extend({
   },
   methods: {
     beforeAvatarUpload (file: any) {
-      const isJPG = file.type === 'image/jpeg'
+      const isJPGOrPNG = file.type === 'image/jpeg' || file.type === 'image/png'
       const isLt2M = file.size / 1024 / 1024 < this.limit
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!')
+      if (!isJPGOrPNG) {
+        this.$message.error('上传封面图片只能是 JPG/PGN 格式!')
       }
       if (!isLt2M) {
-        this.$message.error(`上传头像图片大小不能超过 ${this.limit}MB!`)
+        this.$message.error(`上传封面图片大小不能超过 ${this.limit}MB!`)
       }
-      return isJPG && isLt2M
+      return isJPGOrPNG && isLt2M
     },
     async handleUpload (options: any) {
       try {
