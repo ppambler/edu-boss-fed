@@ -12,6 +12,8 @@
         :props="defaultProps"
         draggable
         :allow-drop="handleAllowDrop"
+        v-loading="isLoading"
+        @node-drop="handleSort"
       >
         <div class="inner" slot-scope="{ node, data }">
           <span>{{ node.label }}</span>
@@ -185,7 +187,8 @@ export default Vue.extend({
       isAddSectionShow: false,
       section,
       isAddLessonShow: false,
-      lesson
+      lesson,
+      isLoading: false
     }
   },
 
@@ -273,6 +276,34 @@ export default Vue.extend({
         draggingNode.data.sectionId === dropNode.data.sectionId &&
         type !== 'inner'
       )
+    },
+
+    async handleSort (dragNode: any, dropNode: any, type: any, event: any) {
+      this.isLoading = true
+      try {
+        await Promise.all(
+          dropNode.parent.childNodes.map((item: any, index: number) => {
+            if (dragNode.data.lessonDTOS) {
+              // 阶段
+              return saveOrUpdateSection({
+                id: item.data.id,
+                orderNum: index + 1
+              })
+            } else {
+              // 课时
+              return saveOrUpdateLesson({
+                id: item.data.id,
+                orderNum: index + 1
+              })
+            }
+          })
+        )
+        this.$message.success('排序成功')
+      } catch (err) {
+        console.log(err)
+        this.$message.error('排序失败')
+      }
+      this.isLoading = false
     }
   }
 })
