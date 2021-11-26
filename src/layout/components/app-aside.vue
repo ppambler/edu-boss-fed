@@ -50,14 +50,51 @@
           <span slot="title">广告位列表</span>
         </el-menu-item>
       </el-submenu>
+      <!-- <template v-for="(menu, index) in menuList">
+        <el-submenu
+          v-if="
+            menu.subMenuList &&
+            menu.shown &&
+            menu.subMenuList.some((item) => item.shown)
+          "
+          :key="menu.id"
+          :index="index + ''"
+        >
+          <template slot="title">
+            <i :class="`el-icon-${menu.icon}`"></i>
+            <span>{{ menu.name }}</span>
+          </template>
+          <template v-for="subMenu in menu.subMenuList">
+            <el-menu-item
+              v-if="subMenu.shown"
+              :key="subMenu.id"
+              :index="subMenu.href"
+            >
+              <i :class="`el-icon-${subMenu.icon}`"></i>
+              <span slot="title">{{ subMenu.name }}</span>
+            </el-menu-item>
+          </template>
+        </el-submenu>
+        <template v-else>
+          <el-menu-item v-if="menu.shown" :key="menu.id" :index="menu.href">
+            <i :class="`el-icon-${menu.icon}`"></i>
+            <span slot="title">{{ menu.name }}</span>
+          </el-menu-item>
+        </template>
+      </template> -->
     </el-menu>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
+import { mapState } from 'vuex'
+
 export default Vue.extend({
   name: 'AppAside',
+  computed: {
+    ...mapState(['menuList'])
+  },
   methods: {
     handleOpen (key: string, keyPath: string): void {
       console.log(key, keyPath)
