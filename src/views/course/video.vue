@@ -2,27 +2,35 @@
   <div class="course-video">
     <el-card>
       <div slot="header">
-        <span>课程：xxx</span>
+        <span>课程：{{ courseName }}</span>
         <br />
-        <span>阶段：xxx</span>
+        <span>阶段：{{ sectionName }}</span>
         <br />
-        <span>课时：xxx</span>
+        <span>课时：{{ lessonName }} </span>
       </div>
       <el-form label-width="70px">
         <el-form-item label="视频上传">
           <input ref="video-file" type="file" />
         </el-form-item>
+        <el-form-item v-if="lesson" label="已有视频">
+          <div>{{ lesson.fileName }}</div>
+        </el-form-item>
         <el-form-item label="封面上传">
           <input ref="image-file" type="file" />
+        </el-form-item>
+        <el-form-item v-if="lesson" label="已有封面">
+          <div>
+            <img :src="lesson.coverImageUrl" alt="coverImage" />
+          </div>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleUpload">开始上传</el-button>
           <el-button @click="$router.back()">返回</el-button>
         </el-form-item>
         <el-form-item>
-          <p>视频上传中：{{ uploadPercent }}%</p>
+          <p v-if="uploadPercent">视频上传中：{{ uploadPercent }}%</p>
           <p v-if="isUploadSucess">
-            视频转码中：{{ isTransCodeSuccess ? "完成" : "正在处理，请稍后" }}
+            视频转码中：{{ isTransCodeSuccess ? "完成" : "正在处理，请稍等" }}
           </p>
         </el-form-item>
       </el-form>
@@ -32,14 +40,24 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { getCourseById } from '@/services/course'
+import { getSectionById } from '@/services/course-section'
 import {
   getAliyunImagUploadAddressAdnAuth,
   getAliyunVideoUploadAddressAdnAuth,
   aliyunTransCode,
-  getAliyunTransCodePercent
+  getAliyunTransCodePercent,
+  getMediaByLessonId
 } from '@/services/aliyun-upload'
+
 export default Vue.extend({
   name: 'CourseVideo',
+  props: {
+    courseId: {
+      type: [String, Number],
+      required: true
+    }
+  },
   data () {
     return {
       uploader: null,
@@ -47,7 +65,8 @@ export default Vue.extend({
       videoId: null,
       uploadPercent: 0,
       isUploadSucess: false,
-      isTransCodeSuccess: false
+      isTransCodeSuccess: false,
+      lesson: null
     }
   },
   computed: {
@@ -56,12 +75,26 @@ export default Vue.extend({
     },
     image () {
       return this.$refs['image-file']
+    },
+    courseName () {
+      return this.$route.query.courseName
+    },
+    sectionName () {
+      return this.$route.query.sectionName
+    },
+    lessonName () {
+      return this.$route.query.lessonName
     }
   },
   created () {
     this.initUploader()
+    this.loadLesson(this.$route.query.lessonId)
   },
   methods: {
+    async loadLesson (lessonId: any) {
+      const { data } = await getMediaByLessonId(lessonId)
+      this.lesson = data.data
+    },
     initUploader () {
       this.uploader = new window.AliyunUpload.Vod({
         // 阿里账号ID，必须有值 ，值的来源https://help.aliyun.com/knowledge_detail/37196.html
@@ -99,7 +132,7 @@ export default Vue.extend({
 
           // 2. 调用 uploader.setUploadAuthAndAddress 设置上传凭证
           /* eslint-disable */
-          (this.uploader as any).setUploadAuthAndAddress(
+          ;(this.uploader as any).setUploadAuthAndAddress(
             uploadInfo,
             uploadAddressAndAuth.uploadAuth,
             uploadAddressAndAuth.uploadAddress,

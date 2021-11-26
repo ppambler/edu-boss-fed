@@ -36,3 +36,13 @@ export const getAliyunTransCodePercent = (lessonId: any) => {
     }
   })
 }
+
+export const getMediaByLessonId = (lessonId: any) => {
+  return request({
+    method: 'GET',
+    url: '/boss/course/upload/getMediaByLessonId.json',
+    params: {
+      lessonId
+    }
+  })
+}

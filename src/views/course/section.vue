@@ -41,20 +41,7 @@
             <el-button @click="handleShowEditLesson(data, node.parent.data)"
               >编辑</el-button
             >
-            <el-button
-              type="success"
-              @click="
-                $router.push({
-                  name: 'course-video',
-                  params: {
-                    courseId,
-                  },
-                  query: {
-                    sectionId: node.parent.id,
-                    lessonId: data.id,
-                  },
-                })
-              "
+            <el-button type="success" @click="handleUploadVideo(data, node)"
               >上传视频</el-button
             >
             <el-select
@@ -278,6 +265,8 @@ export default Vue.extend({
     },
 
     handleShowEditLesson (lesson: any, section: any) {
+      console.log('data, node.parent.data')
+      console.log(lesson, section)
       this.lesson = lesson
       this.lesson.sectionName = section.sectionName
       this.isAddLessonShow = true
@@ -319,6 +308,31 @@ export default Vue.extend({
         this.$message.error('排序失败')
       }
       this.isLoading = false
+    },
+
+    handleUploadVideo (lesson: any, node: any) {
+      // console.log(lesson)
+      // console.log(node)
+      // console.log(this.courseId)
+      // console.log(node.parent.id)
+      // console.log(lesson.id)
+      // console.log(node.parent.data.sectionName)
+      // console.log(lesson.theme)
+      // console.log(this.course.courseName)
+      console.log(this.course)
+      this.$router.push({
+        name: 'course-video',
+        params: {
+          courseId: this.course.id
+        },
+        query: {
+          sectionId: node.parent.id,
+          lessonId: lesson.id,
+          sectionName: node.parent.data.sectionName,
+          lessonName: lesson.theme,
+          courseName: this.course.courseName
+        }
+      })
     }
   }
 })
