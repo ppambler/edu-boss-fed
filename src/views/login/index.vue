@@ -1,5 +1,8 @@
 <template>
   <div class="login">
+    <div>
+      <img class="logo" src="@/assets/logo.png" alt="EduBoss">
+    </div>
     <!--
       1. :model="ruleForm"
       2. :rules="rules"
@@ -13,7 +16,9 @@
       :model="form"
       :rules="rules"
       label-width="80px"
+      size="medium"
     >
+      <h2 class="form-title">系统登录</h2>
       <el-form-item label="手机号" prop="phone">
         <el-input v-model="form.phone"></el-input>
       </el-form-item>
@@ -114,13 +119,24 @@ export default Vue.extend({
 .login {
   height: 100vh;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  .logo {
+    width: 100px;
+    margin: 20px;
+    margin-top: -100px;
+  }
   .login-form {
-    width: 300px;
+    width: 380px;
     background: #fff;
-    padding: 20px;
+    padding: 30px;
     border-radius: 5px;
+    .form-title {
+      margin: 0 0 1rem;
+      font-weight: 400;
+      font-size: 1.5rem;
+    }
   }
   .login-btn {
     width: 100%;
