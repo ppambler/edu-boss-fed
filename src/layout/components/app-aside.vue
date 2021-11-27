@@ -121,6 +121,7 @@ export default Vue.extend({
     background: #28333e;
     color: #fff;
     text-decoration: none;
+    height: 60px;
     img {
       width: 40px;
     }
