@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import Layout from '@/layout/index.vue'
 import store from '@/store'
+import nprogress from 'nprogress'
+import 'nprogress/nprogress.css'
 
 Vue.use(VueRouter)
 
@@ -123,6 +125,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
+  nprogress.start()
   // console.log('进入了路由全局守卫')
   // console.log('to => ', to)
   // console.log('from => ', from)
@@ -150,6 +153,10 @@ router.beforeEach(async (to, from, next) => {
   console.log(data)
 
   next()
+})
+
+router.afterEach(() => {
+  nprogress.done()
 })
 
 // 全局前置守卫：任何页面的访问都要经过这里
