@@ -22,6 +22,7 @@ module.exports = {
         requireLast: true
       }
     }],
-    '@typescript-eslint/no-explicit-any': 'off'
+    "@typescript-eslint/no-explicit-any": ["off"],
+    "@typescript-eslint/ban-ts-comment": 'warn'
   }
 }

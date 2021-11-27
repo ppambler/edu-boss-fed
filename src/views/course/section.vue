@@ -323,14 +323,14 @@ export default Vue.extend({
       this.$router.push({
         name: 'course-video',
         params: {
-          courseId: this.course.id
+          courseId: (this.course as any).id
         },
         query: {
           sectionId: node.parent.id,
           lessonId: lesson.id,
           sectionName: node.parent.data.sectionName,
           lessonName: lesson.theme,
-          courseName: this.course.courseName
+          courseName: (this.course as any).courseName
         }
       })
     }

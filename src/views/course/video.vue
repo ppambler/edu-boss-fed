@@ -39,9 +39,10 @@
 </template>
 
 <script lang="ts">
+// @ts-nocheck
 import Vue from 'vue'
-import { getCourseById } from '@/services/course'
-import { getSectionById } from '@/services/course-section'
+// import { getCourseById } from '@/services/course'
+// import { getSectionById } from '@/services/course-section'
 import {
   getAliyunImagUploadAddressAdnAuth,
   getAliyunVideoUploadAddressAdnAuth,
