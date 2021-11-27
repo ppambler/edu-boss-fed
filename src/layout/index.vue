@@ -44,6 +44,6 @@ export default Vue.extend({
   background: #e9eef3;
 }
 .el-aside {
-  background: #d3dce6;
+  background: #28333e;
 }
 </style>

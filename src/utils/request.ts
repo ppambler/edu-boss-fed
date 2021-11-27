@@ -33,7 +33,7 @@ function refreshToken () {
 
 // 请求拦截器
 let isRefreshing = false // 控制刷新 token 的状态
-let requests: any[] = [] // 存储刷新 token 期间过来的 401 请求
+let requests: Array<() => void> = [] // 存储刷新 token 期间过来的 401 请求
 request.interceptors.request.use(function (config) {
   // 我们就在这里通过改写 config 配置信息来实现业务功能的统一处理
   const { user } = store.state
