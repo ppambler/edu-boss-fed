@@ -1,8 +1,10 @@
 <template>
   <div class="aside">
     <router-link class="logo" to="/" title="Back to Home">
-      <img src="./logo.png" alt="LagouEdu">
-      <h1>Edu Boss</h1>
+      <img src="./logo.png" alt="LagouEdu" />
+      <transition name="fade">
+        <h1 v-if="!collapse">Edu Boss</h1>
+      </transition>
     </router-link>
     <el-menu
       class="el-menu"
@@ -13,7 +15,7 @@
       text-color="#bbbfbc"
       active-text-color="#f7f8f8"
       router
-      :collapse="false"
+      :collapse="collapse"
     >
       <el-submenu index="1">
         <template slot="title">
@@ -97,6 +99,7 @@ import { mapState } from 'vuex'
 
 export default Vue.extend({
   name: 'AppAside',
+  props: ['collapse'],
   computed: {
     ...mapState(['menuList'])
   },
@@ -123,7 +126,7 @@ export default Vue.extend({
     text-decoration: none;
     height: 60px;
     img {
-      width: 40px;
+      width: 25px;
     }
   }
   .el-menu {
@@ -137,6 +140,16 @@ export default Vue.extend({
     &:not(.el-menu--collapse) {
       width: 200px;
     }
+  }
+
+  .fade-enter-active,
+  .fade-leave-active {
+    // 指就是html中fade名称
+    transition: all 0.2s ease-in; // 0.5s动画过渡的时间
+  }
+  .fade-enter,
+  .fade-leave-to {
+    transition: all 0.2s ease-out;
   }
 }
 </style>

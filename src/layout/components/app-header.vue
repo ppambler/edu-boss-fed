@@ -1,22 +1,27 @@
 <template>
   <div class="header">
-    <Breadcrumb />
-    <el-dropdown>
-      <span class="el-dropdown-link">
-        <el-avatar
-          shape="square"
-          :size="40"
-          :src="userInfo.portrait || require('@/assets/default-avatar.png')"
-        ></el-avatar>
-        <i class="el-icon-arrow-down el-icon--right"></i>
-      </span>
-      <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item>{{ userInfo.userName }}</el-dropdown-item>
-        <el-dropdown-item divided @click.native="handleLogout"
-          >退出</el-dropdown-item
-        >
-      </el-dropdown-menu>
-    </el-dropdown>
+    <el-button class="hamburger" :icon="hamburgerIcon" @click.stop="handleCollapse"></el-button>
+    <div class="breadcrumbWrapper">
+      <Breadcrumb />
+    </div>
+    <div class="dropdownWrapper">
+      <el-dropdown>
+        <span class="el-dropdown-link">
+          <el-avatar
+            shape="square"
+            :size="40"
+            :src="userInfo.portrait || require('@/assets/default-avatar.png')"
+          ></el-avatar>
+          <i class="el-icon-arrow-down el-icon--right"></i>
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item>{{ userInfo.userName }}</el-dropdown-item>
+          <el-dropdown-item divided @click.native="handleLogout"
+            >退出</el-dropdown-item
+          >
+        </el-dropdown-menu>
+      </el-dropdown>
+    </div>
   </div>
 </template>
 
@@ -29,9 +34,11 @@ export default Vue.extend({
   components: {
     Breadcrumb
   },
+  props: ['collapse'],
   data () {
     return {
-      userInfo: {} // 当前登录用户信息
+      userInfo: {}, // 当前登录用户信息
+      hamburgerIcon: 'el-icon-s-fold'
     }
   },
   created () {
@@ -68,6 +75,11 @@ export default Vue.extend({
             message: '已取消退出'
           })
         })
+    },
+    handleCollapse () {
+      const flag = !this.collapse
+      this.hamburgerIcon = flag ? 'el-icon-s-unfold' : 'el-icon-s-fold'
+      this.$emit('update:collapse', flag)
     }
   }
 })
@@ -78,10 +90,28 @@ export default Vue.extend({
   height: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  margin-left: -20px;
+  /* justify-content: space-between; */
   .el-dropdown-link {
     display: flex;
     align-items: center;
+  }
+  .hamburger {
+    padding: 17px;
+    height: 60px;
+    font-size: 20px;
+    border: 0;
+    border-radius: 0;
+    background-color: #f8f9fb;
+    &:hover {
+      color: #28333e;
+    }
+    &:focus {
+      color: #28333e;
+    }
+  }
+  .dropdownWrapper {
+    margin-left: auto;
   }
 }
 </style>

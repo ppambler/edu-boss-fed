@@ -1,9 +1,9 @@
 <template>
   <el-container>
-    <el-aside width="auto"> <app-aside /></el-aside>
+    <el-aside width="auto"> <app-aside :collapse="isCollapse"/></el-aside>
     <el-container>
       <el-header>
-        <app-header />
+        <app-header :collapse.sync="isCollapse"/>
       </el-header>
       <el-main> <router-view /> </el-main>
     </el-container>
@@ -19,6 +19,11 @@ export default Vue.extend({
   components: {
     AppAside,
     AppHeader
+  },
+  data () {
+    return {
+      isCollapse: false
+    }
   }
 })
 </script>
