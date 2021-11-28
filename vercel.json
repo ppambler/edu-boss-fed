@@ -1,11 +1,11 @@
 {
   "rewrites": [
     {
-      "src": "/api/boss/(.*)",
+      "source": "/api/boss/(.*)",
       "destination": "/api/proxy"
     },
     {
-      "src": "/api/front/(.*)",
+      "source": "/api/front/(.*)",
       "destination": "/api/proxy"
     }
   ]
