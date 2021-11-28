@@ -1,5 +1,23 @@
 // vue.config.js
-module.exports = {
+const isProd = process.env.NODE_ENV === 'production'
+
+const cdn = {
+  externals: {
+    'element-ui': 'ELEMENT',
+    vue: 'Vue',
+    dayjs: 'dayjs'
+  },
+  js: [
+    'https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js',
+    'https://cdn.jsdelivr.net/npm/element-ui@2.15.3/lib/index.min.js',
+    'https://cdn.jsdelivr.net/npm/dayjs@1.10.6/dayjs.min.js'
+  ],
+  css: [
+    'https://cdn.jsdelivr.net/npm/element-ui@2.15.3/lib/theme-chalk/index.css'
+  ]
+}
+
+const config = {
   css: {
     loaderOptions: {
       scss: {
@@ -25,5 +43,20 @@ module.exports = {
         }
       }
     }
-  }
+  },
+  chainWebpack: config => {
+    if (isProd) {
+      config.plugin('html').tap(args => {
+        args[0].cdn = cdn
+        return args
+      })
+    }
+  },
+  configureWebpack: {}
 }
+
+if (isProd) {
+  config.configureWebpack.externals = cdn.externals
+}
+
+module.exports = config
