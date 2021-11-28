@@ -23,6 +23,7 @@ module.exports = {
       }
     }],
     "@typescript-eslint/no-explicit-any": ["off"],
-    "@typescript-eslint/ban-ts-comment": 'warn'
+    "@typescript-eslint/ban-ts-comment": 'warn',
+    "@typescript-eslint/no-var-requires": 'warn'
   }
 }

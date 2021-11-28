@@ -1,4 +1,5 @@
 // vue.config.js
+const TerserPlugin = require('terser-webpack-plugin')
 const isProd = process.env.NODE_ENV === 'production'
 
 const cdn = {
@@ -52,11 +53,24 @@ const config = {
       })
     }
   },
-  configureWebpack: {}
+  configureWebpack: {
+    optimization: {
+      minimizer: [
+        new TerserPlugin({
+          terserOptions: {
+            compress: {
+              drop_console: true
+            }
+          }
+        })
+      ]
+    }
+  }
 }
 
 if (isProd) {
   config.configureWebpack.externals = cdn.externals
+  config.productionSourceMap = false
 }
 
 module.exports = config
