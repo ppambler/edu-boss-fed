@@ -18,21 +18,21 @@ const routes: Array<RouteConfig> = [
     path: '/',
     component: Layout,
     meta: {
-      title: '首页',
+      title: '课程管理',
       requiresAuth: true
     },
     children: [
       {
         path: '', // 默认子路由
         name: 'home',
-        component: () => import(/* webpackChunkName: 'home' */ '@/views/home/index.vue')
+        component: () => import(/* webpackChunkName: 'home' */ '@/views/course/index.vue')
       }
     ]
   },
   authorityRoutes,
   courseRoutes,
   userRoutes,
-  advertRoutes,
+  // advertRoutes,
   {
     path: '*',
     name: '404',
